@@ -37,7 +37,7 @@ data() {
        loginRules:{
         //验证用户名
            username: [
-            { required: true, message: '请输入登录账号', trigger: 'blur' },
+            { required: true, message: '请输入用户名', trigger: 'blur' },
             { min: 3, max: 10, message: '请输入的长度在 3 到 10 个字符', trigger: 'blur' }
           ],
         //验证密码
