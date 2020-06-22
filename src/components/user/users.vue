@@ -40,7 +40,7 @@
                   </el-tooltip>
                  <!-- 分配角色按钮 -->
                    <el-tooltip  effect="dark" content="分配角色" placement="top" :enterable="false">
-                        <el-button type="warning"  icon="el-icon-share"  circle size="small" ></el-button>
+                        <el-button type="warning"  icon="el-icon-share"  circle size="small" @click="set(scope.row)" ></el-button>
                   </el-tooltip>
                 <!-- 删除按钮 -->
                  <el-tooltip  effect="dark" content="删除" placement="top" :enterable="false">
@@ -108,6 +108,31 @@
   <span slot="footer" class="dialog-footer">
     <el-button @click="edVisible= false">取 消</el-button>
     <el-button type="primary" @click="editUserinfo">确 定</el-button>
+  </span>
+</el-dialog>
+
+<!-- 分配角色的对话框 -->
+<el-dialog
+  title="分配角色"
+  :visible.sync="setRolseVisible"
+  width="50%" @close="setRoleClose">
+<div>
+  <p>当前用户:{{userInfo.username}}</p>
+  <p>当前角色:{{userInfo.role_name}}</p>
+  <p>修改新角色:
+      <el-select v-model="selectRolesId" placeholder="请修改角色">
+    <el-option
+      v-for="item in rolesList"
+      :key="item.id"
+      :label="item.roleName"
+      :value="item.id">
+    </el-option>
+  </el-select>
+  </p>
+</div>
+  <span slot="footer" class="dialog-footer">
+    <el-button @click="setRolseVisible = false">取 消</el-button>
+    <el-button type="primary" @click="setRolseInfo">确 定</el-button>
   </span>
 </el-dialog>
     </div>
@@ -191,7 +216,11 @@ export default {
           mobile:[
               { required: true, message: '请输入手机号码', trigger:'blur' },
               {validator:checkMobile ,trigger: 'blur'}
-          ]}
+          ]},
+          setRolseVisible:false,
+          userInfo:{},
+          rolesList:[],
+          selectRolesId:''
       }
     },
     created() {
@@ -263,7 +292,7 @@ export default {
        if(!valid) return
           //发起修改用户的请求
        const {data:res}= await this.$http.put('users/'+this.editForm.id,{email:this.editForm.email,mobile:this.editForm.mobile})
-  
+            
       if(res.meta.status!==200){
        return  this.$message.error('更新用户状态失败')
           } 
@@ -288,6 +317,29 @@ export default {
        }
        this.$message.success ('删除用户成功')
        this.getUserList()
+        },
+        // 分配角色的对话框
+       async set(row){
+          this.userInfo=row
+          // 获取角色列表
+       const {data:res}=  await this.$http.get('roles')
+       if(res.meta.status!==200) return this.$message.error('获取角色数据失败')
+       this.rolesList=res.data
+      this.setRolseVisible=true
+        },
+        async setRolseInfo(){
+          if(!this.selectRolesId){
+            return this.$message.error('请输入新的角色')
+          }
+          const {data:res}=await this.$http.put(`users/${this.userInfo.id}/role`,{rid:this.selectRolesId})
+          if(res.meta.status!==200) return this.$message.error('修改角色失败')
+          this.$message.success('修改角色成功')
+          this.getUserList()
+          this.setRolseVisible=false
+        },
+        setRoleClose(){
+          this.selectRolesId="",
+          this.userInfo=''
         }
       }
     }
