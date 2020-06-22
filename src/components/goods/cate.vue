@@ -274,7 +274,7 @@ export default {
         async compile(id){
       const {data:res}= await this.$http.get('categories/'+id)
       if(res.meta.status!==200){
-        return this.$message.error('查询角色信息失败')
+        return this.$message.error('查询分类信息失败')
       }
     //   console.log(res.data)
       this.editForm=res.data
@@ -286,11 +286,11 @@ export default {
           //发起修改用户的请求
        const {data:res}= await this.$http.put('categories/'+this.editForm.cat_id,{cat_name:this.editForm.cat_name})
       if(res.meta.status!==200){
-       return  this.$message.error('编辑角色状态失败')
+       return  this.$message.error('编辑分类状态失败')
           } 
           this.addVisible1 = false
           this.getCateList()
-          this.$message.success('编辑角色状态成功')
+          this.$message.success('编辑分类状态成功')
          })
         },
   }
