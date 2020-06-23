@@ -10,6 +10,8 @@ import cate from '../components/goods/cate.vue'
 import params from '../components/goods/params.vue'
 import goodsList from "../components/goods/list.vue"
 import App from "../components/goods/app.vue"
+import indent from "../components/order/indent.vue"
+import data from "../components/data/data.vue"
 Vue.use(VueRouter)
 
 const routes = []
@@ -23,18 +25,17 @@ const router = new VueRouter({
                 path: '/home',
                 component: Home,
                 redirect: '/Welcome',
-                children: [{
-                        path: '/Welcome',
-                        component: Welcome
-                    }, {
-                        path: '/users',
-                        component: Users
-                    }, { path: '/rights', component: rights },
+                children: [
+                    { path: '/Welcome', component: Welcome },
+                    { path: '/users', component: Users },
+                    { path: '/rights', component: rights },
                     { path: '/roles', component: roles },
                     { path: '/categories', component: cate },
                     { path: '/params', component: params },
                     { path: '/goods', component: goodsList },
-                    { path: '/goods/add', component: App }
+                    { path: '/goods/add', component: App },
+                    { path: '/orders', component: indent },
+                    { path: '/reports', component: data }
                 ]
             }
         ]
